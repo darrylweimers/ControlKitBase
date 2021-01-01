@@ -10,10 +10,29 @@ import UtilityKit
 
 class ViewController: UIViewController, LensMenuViewDelegate {
     
+    //  MARK: image test 1
+//    private lazy var lensFiltersImages: [UIImage] = {
+//        var images: [UIImage] = []
+//        for i in 0...19 {
+//          guard let image = UIImage(named: "face\(i)") else { break }
+//          images.append(image)
+//        }
+//        return images
+//    }()
+    
+    //  MARK: image test 2
     private lazy var lensFiltersImages: [UIImage] = {
+        let aScalars = "a".unicodeScalars
+        let aCode = aScalars[aScalars.startIndex].value
+
+        let letters: [Character] = (0..<26).map {
+            i in Character(UnicodeScalar(aCode + i) ?? "a")
+        }
+        
         var images: [UIImage] = []
-        for i in 0...19 {
-          guard let image = UIImage(named: "face\(i)") else { break }
+        for letter in letters {
+            let config = UIImage.SymbolConfiguration(pointSize: 8, weight: .light, scale: .small)
+          guard let image = UIImage(systemName: "\(letter).circle.fill", withConfiguration: config) else { break }
           images.append(image)
         }
         return images
