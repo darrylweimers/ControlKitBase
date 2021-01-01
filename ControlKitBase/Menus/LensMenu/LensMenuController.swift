@@ -33,7 +33,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     private let menuHeight: CGFloat = 80
     private var lensFiltersImages: [UIImage]
     
-    init(lensFiltersImages: [UIImage]) {
+    public init(lensFiltersImages: [UIImage]) {
         self.lensFiltersImages = lensFiltersImages
         super.init(nibName: nil, bundle: nil)
     }

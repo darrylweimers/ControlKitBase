@@ -84,12 +84,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CD17D529259FD2A600FBF32F /* Menu */ = {
+		CD17D529259FD2A600FBF32F /* Menus */ = {
 			isa = PBXGroup;
 			children = (
 				CD17D52A259FD2B600FBF32F /* LensMenu */,
 			);
-			path = Menu;
+			path = Menus;
 			sourceTree = "<group>";
 		};
 		CD17D52A259FD2B600FBF32F /* LensMenu */ = {
@@ -125,7 +125,7 @@
 		CDFD438A259FD1C7003CCB19 /* ControlKitBase */ = {
 			isa = PBXGroup;
 			children = (
-				CD17D529259FD2A600FBF32F /* Menu */,
+				CD17D529259FD2A600FBF32F /* Menus */,
 				CDFD438B259FD1C7003CCB19 /* AppDelegate.swift */,
 				CDFD43C6259FD1FF003CCB19 /* ViewController.swift */,
 				CDFD438D259FD1C7003CCB19 /* SceneDelegate.swift */,
