@@ -95,6 +95,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LensCircleCell.reuseIdentifier, for: indexPath) as? LensCircleCell else { fatalError() }
 
         cell.image = lensFiltersImages[indexPath.row]
+        cell.layer.cornerRadius = menuHeight/2
         return cell
     }
     

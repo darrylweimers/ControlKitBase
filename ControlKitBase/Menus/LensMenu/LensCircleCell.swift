@@ -19,8 +19,6 @@ public class LensCircleCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 35
-        imageView.layer.borderColor = UIColor.white.cgColor
-        imageView.layer.borderWidth = 3
         
         return imageView
     }()
