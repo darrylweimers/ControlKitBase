@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "UtilityKit",
+        "repositoryURL": "https://github.com/darrylweimers/UtilityKit.git",
+        "state": {
+          "branch": null,
+          "revision": "c7330397154fc0194b96ce071bf32e5569b4c47d",
+          "version": "1.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

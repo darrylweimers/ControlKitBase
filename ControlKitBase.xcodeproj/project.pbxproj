@@ -3,18 +3,22 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD17D52E259FD2D300FBF32F /* LensMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD17D52B259FD2D200FBF32F /* LensMenuController.swift */; };
+		CD17D52F259FD2D300FBF32F /* LensFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD17D52C259FD2D200FBF32F /* LensFlowLayout.swift */; };
+		CD17D530259FD2D300FBF32F /* LensCircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD17D52D259FD2D200FBF32F /* LensCircleCell.swift */; };
+		CD17D536259FD30400FBF32F /* UtilityKit in Frameworks */ = {isa = PBXBuildFile; productRef = CD17D535259FD30400FBF32F /* UtilityKit */; };
 		CDFD438C259FD1C7003CCB19 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFD438B259FD1C7003CCB19 /* AppDelegate.swift */; };
 		CDFD438E259FD1C7003CCB19 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFD438D259FD1C7003CCB19 /* SceneDelegate.swift */; };
-		CDFD4390259FD1C7003CCB19 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFD438F259FD1C7003CCB19 /* ViewController.swift */; };
 		CDFD4393259FD1C7003CCB19 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDFD4391259FD1C7003CCB19 /* Main.storyboard */; };
 		CDFD4395259FD1CA003CCB19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDFD4394259FD1CA003CCB19 /* Assets.xcassets */; };
 		CDFD4398259FD1CA003CCB19 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CDFD4396259FD1CA003CCB19 /* LaunchScreen.storyboard */; };
 		CDFD43A3259FD1CA003CCB19 /* ControlKitBaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFD43A2259FD1CA003CCB19 /* ControlKitBaseTests.swift */; };
 		CDFD43AE259FD1CA003CCB19 /* ControlKitBaseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFD43AD259FD1CA003CCB19 /* ControlKitBaseUITests.swift */; };
+		CDFD43C7259FD200003CCB19 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDFD43C6259FD1FF003CCB19 /* ViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,10 +39,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CD17D52B259FD2D200FBF32F /* LensMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LensMenuController.swift; sourceTree = "<group>"; };
+		CD17D52C259FD2D200FBF32F /* LensFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LensFlowLayout.swift; sourceTree = "<group>"; };
+		CD17D52D259FD2D200FBF32F /* LensCircleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LensCircleCell.swift; sourceTree = "<group>"; };
 		CDFD4388259FD1C7003CCB19 /* ControlKitBase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ControlKitBase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDFD438B259FD1C7003CCB19 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CDFD438D259FD1C7003CCB19 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		CDFD438F259FD1C7003CCB19 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		CDFD4392259FD1C7003CCB19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CDFD4394259FD1CA003CCB19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CDFD4397259FD1CA003CCB19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -49,6 +55,7 @@
 		CDFD43A9259FD1CA003CCB19 /* ControlKitBaseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ControlKitBaseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDFD43AD259FD1CA003CCB19 /* ControlKitBaseUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlKitBaseUITests.swift; sourceTree = "<group>"; };
 		CDFD43AF259FD1CA003CCB19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CDFD43C6259FD1FF003CCB19 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD17D536259FD30400FBF32F /* UtilityKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,6 +84,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CD17D529259FD2A600FBF32F /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				CD17D52A259FD2B600FBF32F /* LensMenu */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		CD17D52A259FD2B600FBF32F /* LensMenu */ = {
+			isa = PBXGroup;
+			children = (
+				CD17D52D259FD2D200FBF32F /* LensCircleCell.swift */,
+				CD17D52C259FD2D200FBF32F /* LensFlowLayout.swift */,
+				CD17D52B259FD2D200FBF32F /* LensMenuController.swift */,
+			);
+			path = LensMenu;
+			sourceTree = "<group>";
+		};
 		CDFD437F259FD1C7003CCB19 = {
 			isa = PBXGroup;
 			children = (
@@ -99,9 +125,10 @@
 		CDFD438A259FD1C7003CCB19 /* ControlKitBase */ = {
 			isa = PBXGroup;
 			children = (
+				CD17D529259FD2A600FBF32F /* Menu */,
 				CDFD438B259FD1C7003CCB19 /* AppDelegate.swift */,
+				CDFD43C6259FD1FF003CCB19 /* ViewController.swift */,
 				CDFD438D259FD1C7003CCB19 /* SceneDelegate.swift */,
-				CDFD438F259FD1C7003CCB19 /* ViewController.swift */,
 				CDFD4391259FD1C7003CCB19 /* Main.storyboard */,
 				CDFD4394259FD1CA003CCB19 /* Assets.xcassets */,
 				CDFD4396259FD1CA003CCB19 /* LaunchScreen.storyboard */,
@@ -144,6 +171,9 @@
 			dependencies = (
 			);
 			name = ControlKitBase;
+			packageProductDependencies = (
+				CD17D535259FD30400FBF32F /* UtilityKit */,
+			);
 			productName = ControlKitBase;
 			productReference = CDFD4388259FD1C7003CCB19 /* ControlKitBase.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +245,9 @@
 				Base,
 			);
 			mainGroup = CDFD437F259FD1C7003CCB19;
+			packageReferences = (
+				CD17D534259FD30400FBF32F /* XCRemoteSwiftPackageReference "UtilityKit" */,
+			);
 			productRefGroup = CDFD4389259FD1C7003CCB19 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -258,9 +291,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDFD4390259FD1C7003CCB19 /* ViewController.swift in Sources */,
+				CDFD43C7259FD200003CCB19 /* ViewController.swift in Sources */,
 				CDFD438C259FD1C7003CCB19 /* AppDelegate.swift in Sources */,
+				CD17D52F259FD2D300FBF32F /* LensFlowLayout.swift in Sources */,
+				CD17D52E259FD2D300FBF32F /* LensMenuController.swift in Sources */,
 				CDFD438E259FD1C7003CCB19 /* SceneDelegate.swift in Sources */,
+				CD17D530259FD2D300FBF32F /* LensCircleCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,7 +402,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -421,7 +457,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -593,6 +629,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CD17D534259FD30400FBF32F /* XCRemoteSwiftPackageReference "UtilityKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/darrylweimers/UtilityKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CD17D535259FD30400FBF32F /* UtilityKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD17D534259FD30400FBF32F /* XCRemoteSwiftPackageReference "UtilityKit" */;
+			productName = UtilityKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CDFD4380259FD1C7003CCB19 /* Project object */;
 }
