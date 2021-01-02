@@ -4,29 +4,20 @@ public class LensCircleCell: UICollectionViewCell {
   
     public static var reuseIdentifier = "\(LensCircleCell.self)"
     
-    private lazy var blackBorderView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .black
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    public lazy var button: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .systemBlue
+        button.tintColor = .white
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 35
+        return button
     }()
     
-    private lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.backgroundColor = .clear
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 35
-        
-        return imageView
-    }()
-
     var image: UIImage? {
         didSet {
-        guard let image = image else { return }
-        imageView.image = image
+            guard let image = image else { return }
+            button.setImage(image, for: .normal)
         }
     }
 
@@ -40,25 +31,18 @@ public class LensCircleCell: UICollectionViewCell {
     }
 
     private func setupViews(superview: UIView) {
-    
-        superview.addSubview(blackBorderView)
-
-        blackBorderView.addSubview(imageView)
+        superview.addSubview(button)
         NSLayoutConstraint.activate([
-            blackBorderView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
-            blackBorderView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
-            blackBorderView.topAnchor.constraint(equalTo: superview.topAnchor),
-            blackBorderView.bottomAnchor.constraint(equalTo: superview.bottomAnchor),
+            button.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
+            button.topAnchor.constraint(equalTo: superview.topAnchor),
+            button.bottomAnchor.constraint(equalTo: superview.bottomAnchor),
         ])
+    }
     
-        blackBorderView.layer.cornerRadius = 36
-        
-        NSLayoutConstraint.activate([
-            imageView.centerYAnchor.constraint(equalTo: blackBorderView.centerYAnchor),
-            imageView.centerXAnchor.constraint(equalTo: blackBorderView.centerXAnchor),
-            imageView.widthAnchor.constraint(equalTo: blackBorderView.widthAnchor, multiplier: 0.98),
-            imageView.heightAnchor.constraint(equalTo: blackBorderView.heightAnchor, multiplier: 0.98),
-        ])
+    public func hide() {
+        self.contentView.isHidden = true
+        self.button.isHidden = true
     }
 }
 

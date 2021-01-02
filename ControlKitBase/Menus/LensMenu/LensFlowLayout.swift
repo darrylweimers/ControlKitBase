@@ -8,7 +8,8 @@ public class LensFlowLayout: UICollectionViewFlowLayout {
         super.prepare()
 
         scrollDirection = .horizontal
-        minimumLineSpacing = 0
+        minimumLineSpacing = 8
+        //minimumInteritemSpacing = 0
     }
   
     public override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {

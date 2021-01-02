@@ -21,23 +21,50 @@ class ViewController: UIViewController, LensMenuViewDelegate {
 //    }()
     
     //  MARK: image test 2
-    private lazy var lensFiltersImages: [UIImage] = {
-        let aScalars = "a".unicodeScalars
-        let aCode = aScalars[aScalars.startIndex].value
+//    private lazy var lensFiltersImages: [UIImage] = {
+//        let aScalars = "a".unicodeScalars
+//        let aCode = aScalars[aScalars.startIndex].value
+//
+//        let letters: [Character] = (0..<26).map {
+//            i in Character(UnicodeScalar(aCode + i) ?? "a")
+//        }
+//
+//        let config = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .small)
+//        var images: [UIImage] = []
+//        for letter in letters {
+//          guard let image = UIImage(systemName: "\(letter).circle.fill", withConfiguration: config) else { break }
+//          images.append(image)
+//        }
+//        return images
+//    }()
 
-        let letters: [Character] = (0..<26).map {
-            i in Character(UnicodeScalar(aCode + i) ?? "a")
+    
+    // MARK: image test 3
+    private lazy var lensFiltersImages: [UIImage] = {
+        var images: [UIImage] = []
+        let config = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .small)
+
+
+        if let image = UIImage(systemName: "trash", withConfiguration: config) {
+            images.append(image)
+        }
+        if let image = UIImage(systemName: "square.and.arrow.up", withConfiguration: config) {
+            images.append(image)
+        }
+        if let image = UIImage(systemName: "square.and.arrow.down.on.square", withConfiguration: config) {
+            images.append(image)
         }
         
-        var images: [UIImage] = []
-        for letter in letters {
-            let config = UIImage.SymbolConfiguration(pointSize: 8, weight: .light, scale: .small)
-          guard let image = UIImage(systemName: "\(letter).circle.fill", withConfiguration: config) else { break }
-          images.append(image)
+        if let image = UIImage(systemName: "square.and.arrow.down.on.square", withConfiguration: config) {
+            images.append(image)
+        }
+        
+        if let image = UIImage(systemName: "square.and.arrow.down.on.square", withConfiguration: config) {
+            images.append(image)
         }
         return images
     }()
-    
+
     public lazy var faceImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -46,7 +73,7 @@ class ViewController: UIViewController, LensMenuViewDelegate {
     
     private lazy var lensViewController: LensMenuController = {
         let controller = LensMenuController(lensFiltersImages: lensFiltersImages)
-        controller.cameraImageView.tintColor = .systemBlue
+        controller.cameraImageView.tintColor = .lightGray
         controller.view.backgroundColor = .clear
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         controller.delegate = self
@@ -65,6 +92,8 @@ class ViewController: UIViewController, LensMenuViewDelegate {
         NSLayoutConstraint.activate([
             lensViewController.view.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
             lensViewController.view.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
+//            lensViewController.view.widthAnchor.constraint(equalToConstant: 3 * 80),
+//            lensViewController.view.centerXAnchor.constraint(equalTo: superview.centerXAnchor),
             lensViewController.view.bottomAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.bottomAnchor),
             lensViewController.view.heightAnchor.constraint(equalToConstant: 80),
         ])

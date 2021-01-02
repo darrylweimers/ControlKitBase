@@ -26,15 +26,20 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
         collectionView.register(LensCircleCell.self, forCellWithReuseIdentifier: LensCircleCell.reuseIdentifier)
         
+        //collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    
         return collectionView
     }()
     
     public var delegate: LensMenuViewDelegate?
     private let menuHeight: CGFloat = 80
     private var lensFiltersImages: [UIImage]
+    private var itemManager: ItemManager
     
     public init(lensFiltersImages: [UIImage]) {
         self.lensFiltersImages = lensFiltersImages
+        let estimatedNumberOfVisibleItems = 5   // will be calculated after view did appear
+        self.itemManager = ItemManager(numberOfItems: lensFiltersImages.count, numberOfVisibleItems: estimatedNumberOfVisibleItems)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -47,12 +52,22 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         setupViews(superview: self.view)
     }
     
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let bounds = lensCollectionView.bounds
+        let itemDiameter = bounds.size.height * 0.9
+        let numberOfVisibleItems = Int((bounds.size.width) / itemDiameter)
+        //print("numberOfVisibleItems - calculated: \(numberOfVisibleItems)")
+        self.itemManager.numberOfVisibleItems = numberOfVisibleItems
+        self.lensCollectionView.reloadData()
+    }
+    
     private func setupViews(superview: UIView) {
         superview.addSubview(lensCollectionView)
         
         NSLayoutConstraint.activate([
-            lensCollectionView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
-            lensCollectionView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
+            lensCollectionView.centerXAnchor.constraint(equalTo: superview.centerXAnchor),
+            lensCollectionView.widthAnchor.constraint(equalTo: superview.widthAnchor),
             lensCollectionView.bottomAnchor.constraint(equalTo: superview.bottomAnchor),
             lensCollectionView.heightAnchor.constraint(equalToConstant: menuHeight)
         ])
@@ -69,59 +84,70 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        let middleIndexPath = IndexPath(item: lensFiltersImages.count/2, section: 0)
+        let middleIndexPath = IndexPath(item: self.itemManager.normalizedNumberOfItems / 2, section: 0)
         selectCell(for: middleIndexPath, animated: false)
     }
 
     private func selectCell(for indexPath: IndexPath, animated: Bool) {
         lensCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
-        delegate?.lensMenuView(self.lensCollectionView, didSelectAt: indexPath)
+        
+        if let normalizedIndexPath = self.itemManager.getIndexPath(indexPath: indexPath) {
+            delegate?.lensMenuView(self.lensCollectionView, didSelectAt: normalizedIndexPath)
+        }
     }
 
     // MARK: UICollectionViewDelegate
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return lensFiltersImages.count
+        return self.itemManager.normalizedNumberOfItems
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectCell(for: indexPath, animated: true)
     }
-    
 
     // MARK: UICollectionViewDataSource
-    
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LensCircleCell.reuseIdentifier, for: indexPath) as? LensCircleCell else { fatalError() }
-
-        cell.image = lensFiltersImages[indexPath.row]
+        
+        cell.isHidden = false
+        cell.button.isUserInteractionEnabled = false
+        guard let normalizedIndexPath = self.itemManager.getIndexPath(indexPath: indexPath) else {
+            cell.isHidden = true
+            return cell
+        }
+        
+        cell.image = lensFiltersImages[normalizedIndexPath.row]
         cell.layer.cornerRadius = menuHeight/2
         return cell
     }
-    
 
     // MARK: UICollectionViewDelegateFlowLayout
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let side = lensCollectionView.frame.height * 0.9
+        //print("side \(side)")
         return CGSize(width: side, height: side)
     }
     
-
     // MARK: UIScrollViewDelegate
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let bounds = lensCollectionView.bounds
+        let xPosition = lensCollectionView.contentOffset.x + bounds.size.width / 2.0
+        let yPosition = bounds.size.height / 2.0
+        let point = CGPoint(x: xPosition, y: yPosition)
 
-        let xPosition = lensCollectionView.contentOffset.x + bounds.size.width/2.0
-        let yPosition = bounds.size.height/2.0
-        let xyPoint = CGPoint(x: xPosition, y: yPosition)
-
-        guard let indexPath = lensCollectionView.indexPathForItem(at: xyPoint) else { return }
-
-        selectCell(for: indexPath, animated: true)
-    }
-
-    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        scrollViewDidEndDecelerating(scrollView)
+        if let indexPath = lensCollectionView.indexPathForItem(at: point) {
+            selectCell(for: indexPath, animated: true)
+            return
+        }
+        
+        // try again by add offset by couple of points to the left
+        let adjustedPoint = CGPoint(x: xPosition - 20, y: yPosition)
+        
+        if let indexPath = lensCollectionView.indexPathForItem(at: adjustedPoint) {
+            selectCell(for: indexPath, animated: true)
+            return
+        }
     }
 
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -129,4 +155,43 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
           scrollViewDidEndDecelerating(scrollView)
         }
     }
+}
+
+struct ItemManager {
+    
+    public var numberOfVisibleItems: Int
+    private let numberOfItems: Int
+    private let numberOfPaddingItemPerSide: Int = 2 // pad to allow item to be reacheable by scrolling
+    
+    public init(numberOfItems: Int, numberOfVisibleItems: Int) {
+        self.numberOfItems = numberOfItems
+        self.numberOfVisibleItems = numberOfVisibleItems
+    }
+    
+    public var normalizedNumberOfItems: Int {
+        get {
+            return numberOfPaddingItemPerSide + numberOfVisibleItems + numberOfPaddingItemPerSide
+        }
+    }
+    
+    public func isPaddingItem(indexPath: IndexPath) -> Bool {
+        let index = indexPath.row // adjust for index path that starts from 0
+        
+        if index < numberOfPaddingItemPerSide ||
+               index >= numberOfPaddingItemPerSide + numberOfItems {
+            //print("padding index: \(index)")
+            return true
+        }
+        //print("valid index: \(index)")
+        return false
+    }
+    
+    public func getIndexPath(indexPath: IndexPath) -> IndexPath? {
+        guard !isPaddingItem(indexPath: indexPath) else {
+            return nil
+        }
+        
+        return IndexPath(row: indexPath.row - numberOfPaddingItemPerSide, section: indexPath.section)
+    }
+    
 }
