@@ -5,12 +5,23 @@ public protocol LensMenuViewDelegate {
 }
 
 public class LensMenuController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout {
-
-    public lazy var cameraImageView: UIImageView = {
+    
+    // MARK: stored properties
+    public var lensColor: UIColor
+    public var imageBackgroundColor: UIColor
+    public var imageTintColor: UIColor
+    public var delegate: LensMenuViewDelegate?
+    private let menuHeight: CGFloat = 75 // MARK: change this value to adjust button size; BEAWARE that dependent features might stop functioning perfectly te
+    private var lensFiltersImages: [UIImage]
+    private var itemManager: ItemManager
+    private var itemDiameterScaleRatio: CGFloat = 0.9
+    
+    // MARK: UIViews
+    public lazy var lensImageView: UIImageView = {
         let imageView = UIImageView()
         let image = UIImage(named: "cameraicon")
         imageView.image = image
-        imageView.tintColor = .systemBlue
+        imageView.tintColor = lensColor
         imageView.backgroundColor = .clear
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -28,14 +39,12 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         return collectionView
     }()
     
-    public var delegate: LensMenuViewDelegate?
-    private let menuHeight: CGFloat = 75 // MARK: change this value to adjust button size; BEAWARE that dependent features might stop functioning perfectly te
-    private var lensFiltersImages: [UIImage]
-    private var itemManager: ItemManager
-    private var itemDiameterScaleRatio: CGFloat = 0.9
-    
-    public init(lensFiltersImages: [UIImage]) {
+    // MARK: init
+    public init(lensFiltersImages: [UIImage], imageTintColor: UIColor = .white, imageBackgroundColor: UIColor = .systemBlue, lensColor: UIColor = .lightGray) {
         self.lensFiltersImages = lensFiltersImages
+        self.lensColor = lensColor
+        self.imageBackgroundColor = imageBackgroundColor
+        self.imageTintColor = imageTintColor
         let estimatedNumberOfVisibleItems = 5   // will be calculated after view did appear
         self.itemManager = ItemManager(numberOfItems: lensFiltersImages.count, numberOfVisibleItems: estimatedNumberOfVisibleItems)
         super.init(nibName: nil, bundle: nil)
@@ -70,12 +79,12 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
             lensCollectionView.heightAnchor.constraint(equalToConstant: menuHeight)
         ])
         
-        superview.addSubview(cameraImageView)
+        superview.addSubview(lensImageView)
         NSLayoutConstraint.activate([
-            cameraImageView.centerXAnchor.constraint(equalTo: superview.centerXAnchor),
-            cameraImageView.bottomAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.bottomAnchor),
-            cameraImageView.heightAnchor.constraint(equalToConstant: menuHeight),
-            cameraImageView.widthAnchor.constraint(equalToConstant: menuHeight),
+            lensImageView.centerXAnchor.constraint(equalTo: superview.centerXAnchor),
+            lensImageView.bottomAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.bottomAnchor),
+            lensImageView.heightAnchor.constraint(equalToConstant: menuHeight),
+            lensImageView.widthAnchor.constraint(equalToConstant: menuHeight),
         ])
     }
 
@@ -117,6 +126,8 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         cell.image = lensFiltersImages[normalizedIndexPath.row]
         let itemDiameter = getItemDiameter(collectionView: collectionView, itemScaleRatio: itemDiameterScaleRatio)
         cell.imageCornerRadius = itemDiameter / 2
+        cell.button.tintColor = imageTintColor
+        cell.button.backgroundColor = imageBackgroundColor
         return cell
     }
 
@@ -159,6 +170,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     }
 }
 
+// MARK: add padding to each end of the items to enable user to scroll to all visible items
 struct ItemManager {
     
     public var numberOfVisibleItems: Int
@@ -172,7 +184,7 @@ struct ItemManager {
     
     public var normalizedNumberOfItems: Int {
         get {
-            return numberOfPaddingItemPerSide + numberOfVisibleItems + numberOfPaddingItemPerSide
+            return numberOfPaddingItemPerSide + numberOfItems + numberOfPaddingItemPerSide
         }
     }
     
@@ -181,10 +193,10 @@ struct ItemManager {
         
         if index < numberOfPaddingItemPerSide ||
                index >= numberOfPaddingItemPerSide + numberOfItems {
-            //print("padding index: \(index)")
+            print("padding index: \(index)")
             return true
         }
-        //print("valid index: \(index)")
+        print("valid index: \(index)")
         return false
     }
     

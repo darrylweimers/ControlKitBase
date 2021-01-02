@@ -54,11 +54,9 @@ class ViewController: UIViewController, LensMenuViewDelegate {
         if let image = UIImage(systemName: "square.and.arrow.down.on.square", withConfiguration: config) {
             images.append(image)
         }
-        
         if let image = UIImage(systemName: "square.and.arrow.down.on.square", withConfiguration: config) {
             images.append(image)
         }
-        
         if let image = UIImage(systemName: "square.and.arrow.down.on.square", withConfiguration: config) {
             images.append(image)
         }
@@ -72,8 +70,8 @@ class ViewController: UIViewController, LensMenuViewDelegate {
     }()
     
     private lazy var lensViewController: LensMenuController = {
-        let controller = LensMenuController(lensFiltersImages: lensFiltersImages)
-        controller.cameraImageView.tintColor = .lightGray
+        let controller = LensMenuController(lensFiltersImages: lensFiltersImages, imageTintColor: .white, imageBackgroundColor: .systemRed, lensColor: .darkGray)
+        //controller.lensImageView.tintColor = .lightGray
         controller.view.backgroundColor = .clear
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         controller.delegate = self

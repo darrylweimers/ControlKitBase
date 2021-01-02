@@ -4,7 +4,7 @@ public class LensCircleCell: UICollectionViewCell {
   
     public static var reuseIdentifier = "\(LensCircleCell.self)"
     
-    private lazy var button: UIButton = {
+    public lazy var button: UIButton = {
         let button = UIButton()
         button.backgroundColor = .systemBlue
         button.tintColor = .white
