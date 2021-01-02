@@ -2,11 +2,14 @@ import UIKit
 
 public protocol LensMenuViewDelegate {
     func lensMenuView(_ lensMenuView: UICollectionView, didSelectAt indexPath: IndexPath)
+    func lensMenuViewDidTapSelection(_ lensMenuView: UICollectionView, didTapSelectionAt indexPath: IndexPath, didTapItem button: UIButton)
 }
 
 public class LensMenuController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout {
     
     // MARK: stored properties
+    public var doPerformSelectionFeedback: Bool
+    public var doPulseAnimationOnSelection: Bool
     public var lensColor: UIColor
     public var imageBackgroundColor: UIColor
     public var imageTintColor: UIColor
@@ -15,6 +18,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     private var lensFiltersImages: [UIImage]
     private var itemManager: ItemManager
     private var itemDiameterScaleRatio: CGFloat = 0.9
+    private var itemSelected: IndexPath?
     
     // MARK: UIViews
     public lazy var lensImageView: UIImageView = {
@@ -39,8 +43,24 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         return collectionView
     }()
     
+    public lazy var pulsatingCircularView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = menuHeight/2
+        view.layer.masksToBounds = true
+        return view
+    }()
+        
     // MARK: init
-    public init(lensFiltersImages: [UIImage], imageTintColor: UIColor = .white, imageBackgroundColor: UIColor = .systemBlue, lensColor: UIColor = .lightGray) {
+    public init(lensFiltersImages: [UIImage],
+                imageTintColor: UIColor = .white,
+                imageBackgroundColor: UIColor = .systemBlue,
+                lensColor: UIColor = .lightGray,
+                doPerformSelectionFeedback: Bool = true,
+                doPulseAnimationOnSelection: Bool = true) {
+        self.doPerformSelectionFeedback = doPerformSelectionFeedback
+        self.doPulseAnimationOnSelection = doPulseAnimationOnSelection
         self.lensFiltersImages = lensFiltersImages
         self.lensColor = lensColor
         self.imageBackgroundColor = imageBackgroundColor
@@ -70,8 +90,15 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     }
     
     private func setupViews(superview: UIView) {
+        superview.addSubview(pulsatingCircularView)
+        NSLayoutConstraint.activate([
+            pulsatingCircularView.centerXAnchor.constraint(equalTo: superview.centerXAnchor),
+            pulsatingCircularView.bottomAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.bottomAnchor),
+            pulsatingCircularView.heightAnchor.constraint(equalToConstant: menuHeight),
+            pulsatingCircularView.widthAnchor.constraint(equalToConstant: menuHeight),
+        ])
+
         superview.addSubview(lensCollectionView)
-        
         NSLayoutConstraint.activate([
             lensCollectionView.centerXAnchor.constraint(equalTo: superview.centerXAnchor),
             lensCollectionView.widthAnchor.constraint(equalTo: superview.widthAnchor),
@@ -101,6 +128,10 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         if let normalizedIndexPath = self.itemManager.getIndexPath(indexPath: indexPath) {
             delegate?.lensMenuView(self.lensCollectionView, didSelectAt: normalizedIndexPath)
         }
+        
+        // save selected item and reload to make button item tappable
+        itemSelected = indexPath
+        self.lensCollectionView.reloadData()
     }
 
     // MARK: UICollectionViewDelegate
@@ -111,16 +142,50 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectCell(for: indexPath, animated: true)
     }
-
+    
+    // MARK: button tapped handler
+    @objc private func buttonTapped(_ button: UIButton) {
+        
+        if doPerformSelectionFeedback {
+            let feedbackGenerator = UISelectionFeedbackGenerator()
+            feedbackGenerator.selectionChanged()
+        }
+        
+        if doPulseAnimationOnSelection  {
+            DispatchQueue.main.async {
+                CATransaction.begin()
+                
+                CATransaction.setCompletionBlock {
+                    self.pulsatingCircularView.backgroundColor = .clear
+                }
+                
+                self.pulsatingCircularView.backgroundColor = self.imageBackgroundColor
+                self.pulsatingCircularView.layer.add(Animator.createPulsingAnimation(), forKey: "pulsing")
+                CATransaction.commit()
+            }
+        }
+       
+        if let itemSelected = itemSelected {
+            delegate?.lensMenuViewDidTapSelection(self.lensCollectionView, didTapSelectionAt: itemSelected, didTapItem: button)
+        }
+    }
+    
     // MARK: UICollectionViewDataSource
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LensCircleCell.reuseIdentifier, for: indexPath) as? LensCircleCell else { fatalError() }
         
         cell.isHidden = false
+        cell.button.isUserInteractionEnabled = false
+        cell.button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
         guard let normalizedIndexPath = self.itemManager.getIndexPath(indexPath: indexPath) else {
             cell.isHidden = true
             return cell
+        }
+        
+        if let itemSelected = itemSelected,
+                indexPath == itemSelected {
+            cell.button.isUserInteractionEnabled = true
         }
         
         cell.image = lensFiltersImages[normalizedIndexPath.row]
@@ -162,50 +227,82 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
             return
         }
     }
-
+    
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
           scrollViewDidEndDecelerating(scrollView)
         }
     }
+    
+    // MARK: animation
+    fileprivate struct Animator {
+        public static func createOpacityAnimation(animationDuration: Double = 0.5) -> CAKeyframeAnimation {
+            let animation = CAKeyframeAnimation(keyPath: "opacity")
+            animation.duration = animationDuration
+            animation.values = [0.4,0.8,0]
+            animation.keyTimes = [0,0.3,1]
+            return animation
+        }
+        
+        public static func createScalingAnimation(animationDuration: Double = 0.5) -> CABasicAnimation {
+            let animation = CABasicAnimation(keyPath: "transform.scale")
+            animation.toValue = 1.2
+            animation.duration = animationDuration
+            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+            animation.autoreverses = true
+            animation.repeatCount = 1
+            return animation
+        }
+        
+        public static func createPulsingAnimation(pulseCount: Float = 1, animationDuration: Double = 0.5) -> CAAnimationGroup {
+            let animationGroup = CAAnimationGroup()
+            animationGroup.duration = 0.5
+            animationGroup.repeatCount = pulseCount
+            let defaultCurve = CAMediaTimingFunction(name: CAMediaTimingFunctionName.default)
+            animationGroup.timingFunction = defaultCurve
+            animationGroup.animations = [Animator.createScalingAnimation(), Animator.createOpacityAnimation()]
+            return animationGroup
+        }
+    }
+    
+    // MARK: add padding to each end of the items to enable user to scroll to all visible items
+    fileprivate struct ItemManager {
+        
+        public var numberOfVisibleItems: Int
+        private let numberOfItems: Int
+        private let numberOfPaddingItemPerSide: Int = 2 // pad to allow item to be reacheable by scrolling
+        
+        public init(numberOfItems: Int, numberOfVisibleItems: Int) {
+            self.numberOfItems = numberOfItems
+            self.numberOfVisibleItems = numberOfVisibleItems
+        }
+        
+        public var normalizedNumberOfItems: Int {
+            get {
+                return numberOfPaddingItemPerSide + numberOfItems + numberOfPaddingItemPerSide
+            }
+        }
+        
+        public func isPaddingItem(indexPath: IndexPath) -> Bool {
+            let index = indexPath.row // adjust for index path that starts from 0
+            
+            if index < numberOfPaddingItemPerSide ||
+                   index >= numberOfPaddingItemPerSide + numberOfItems {
+                //print("padding index: \(index)")
+                return true
+            }
+            //print("valid index: \(index)")
+            return false
+        }
+        
+        public func getIndexPath(indexPath: IndexPath) -> IndexPath? {
+            guard !isPaddingItem(indexPath: indexPath) else {
+                return nil
+            }
+            
+            return IndexPath(row: indexPath.row - numberOfPaddingItemPerSide, section: indexPath.section)
+        }
+    }
 }
 
-// MARK: add padding to each end of the items to enable user to scroll to all visible items
-struct ItemManager {
-    
-    public var numberOfVisibleItems: Int
-    private let numberOfItems: Int
-    private let numberOfPaddingItemPerSide: Int = 2 // pad to allow item to be reacheable by scrolling
-    
-    public init(numberOfItems: Int, numberOfVisibleItems: Int) {
-        self.numberOfItems = numberOfItems
-        self.numberOfVisibleItems = numberOfVisibleItems
-    }
-    
-    public var normalizedNumberOfItems: Int {
-        get {
-            return numberOfPaddingItemPerSide + numberOfItems + numberOfPaddingItemPerSide
-        }
-    }
-    
-    public func isPaddingItem(indexPath: IndexPath) -> Bool {
-        let index = indexPath.row // adjust for index path that starts from 0
-        
-        if index < numberOfPaddingItemPerSide ||
-               index >= numberOfPaddingItemPerSide + numberOfItems {
-            //print("padding index: \(index)")
-            return true
-        }
-        //print("valid index: \(index)")
-        return false
-    }
-    
-    public func getIndexPath(indexPath: IndexPath) -> IndexPath? {
-        guard !isPaddingItem(indexPath: indexPath) else {
-            return nil
-        }
-        
-        return IndexPath(row: indexPath.row - numberOfPaddingItemPerSide, section: indexPath.section)
-    }
-    
-}
+
