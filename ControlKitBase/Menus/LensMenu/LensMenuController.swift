@@ -11,7 +11,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     public var imageBackgroundColor: UIColor
     public var imageTintColor: UIColor
     public var delegate: LensMenuViewDelegate?
-    private let menuHeight: CGFloat = 75 // MARK: change this value to adjust button size; BEAWARE that dependent features might stop functioning perfectly te
+    private let menuHeight: CGFloat = 75 // MARK: change this value to adjust button size; BE AWARE that dependent features might stop functioning perfectly
     private var lensFiltersImages: [UIImage]
     private var itemManager: ItemManager
     private var itemDiameterScaleRatio: CGFloat = 0.9
@@ -134,7 +134,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     // MARK: UICollectionViewDelegateFlowLayout
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let itemDiameter = getItemDiameter(collectionView: collectionView, itemScaleRatio: itemDiameterScaleRatio)
-        print("side \(itemDiameter)")
+        //print("side \(itemDiameter)")
         return CGSize(width: itemDiameter, height: itemDiameter)
     }
     
@@ -193,10 +193,10 @@ struct ItemManager {
         
         if index < numberOfPaddingItemPerSide ||
                index >= numberOfPaddingItemPerSide + numberOfItems {
-            print("padding index: \(index)")
+            //print("padding index: \(index)")
             return true
         }
-        print("valid index: \(index)")
+        //print("valid index: \(index)")
         return false
     }
     
