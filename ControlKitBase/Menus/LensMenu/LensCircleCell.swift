@@ -8,6 +8,7 @@ public class LensCircleCell: UICollectionViewCell {
         let button = UIButton()
         button.backgroundColor = .systemBlue
         button.tintColor = .white
+        button.isUserInteractionEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
         button.clipsToBounds = true
         return button

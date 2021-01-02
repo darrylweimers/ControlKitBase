@@ -109,7 +109,6 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LensCircleCell.reuseIdentifier, for: indexPath) as? LensCircleCell else { fatalError() }
         
         cell.isHidden = false
-        cell.button.isUserInteractionEnabled = false
         guard let normalizedIndexPath = self.itemManager.getIndexPath(indexPath: indexPath) else {
             cell.isHidden = true
             return cell
