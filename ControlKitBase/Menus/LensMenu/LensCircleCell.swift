@@ -4,20 +4,30 @@ public class LensCircleCell: UICollectionViewCell {
   
     public static var reuseIdentifier = "\(LensCircleCell.self)"
     
-    public lazy var button: UIButton = {
+    private lazy var button: UIButton = {
         let button = UIButton()
         button.backgroundColor = .systemBlue
         button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
         button.clipsToBounds = true
-        button.layer.cornerRadius = 35
         return button
     }()
     
     var image: UIImage? {
         didSet {
-            guard let image = image else { return }
+            guard let image = image else {
+                return
+            }
             button.setImage(image, for: .normal)
+        }
+    }
+    
+    var imageCornerRadius: CGFloat? {
+        didSet{
+            guard let imageCornerRadius = imageCornerRadius else {
+                return
+            }
+            button.layer.cornerRadius = imageCornerRadius
         }
     }
 

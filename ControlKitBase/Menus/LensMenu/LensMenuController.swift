@@ -25,16 +25,14 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         collectionView.dataSource = self
         collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
         collectionView.register(LensCircleCell.self, forCellWithReuseIdentifier: LensCircleCell.reuseIdentifier)
-        
-        //collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    
         return collectionView
     }()
     
     public var delegate: LensMenuViewDelegate?
-    private let menuHeight: CGFloat = 80
+    private let menuHeight: CGFloat = 75 // MARK: change this value to adjust button size; BEAWARE that dependent features might stop functioning perfectly te
     private var lensFiltersImages: [UIImage]
     private var itemManager: ItemManager
+    private var itemDiameterScaleRatio: CGFloat = 0.9
     
     public init(lensFiltersImages: [UIImage]) {
         self.lensFiltersImages = lensFiltersImages
@@ -55,7 +53,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         let bounds = lensCollectionView.bounds
-        let itemDiameter = bounds.size.height * 0.9
+        let itemDiameter = bounds.size.height * itemDiameterScaleRatio
         let numberOfVisibleItems = Int((bounds.size.width) / itemDiameter)
         //print("numberOfVisibleItems - calculated: \(numberOfVisibleItems)")
         self.itemManager.numberOfVisibleItems = numberOfVisibleItems
@@ -118,15 +116,20 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         }
         
         cell.image = lensFiltersImages[normalizedIndexPath.row]
-        cell.layer.cornerRadius = menuHeight/2
+        let itemDiameter = getItemDiameter(collectionView: collectionView, itemScaleRatio: itemDiameterScaleRatio)
+        cell.imageCornerRadius = itemDiameter / 2
         return cell
     }
 
     // MARK: UICollectionViewDelegateFlowLayout
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let side = lensCollectionView.frame.height * 0.9
-        //print("side \(side)")
-        return CGSize(width: side, height: side)
+        let itemDiameter = getItemDiameter(collectionView: collectionView, itemScaleRatio: itemDiameterScaleRatio)
+        print("side \(itemDiameter)")
+        return CGSize(width: itemDiameter, height: itemDiameter)
+    }
+    
+    private func getItemDiameter(collectionView: UICollectionView, itemScaleRatio: CGFloat) -> CGFloat {
+        return collectionView.frame.height * itemDiameterScaleRatio
     }
     
     // MARK: UIScrollViewDelegate
@@ -141,9 +144,9 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
             return
         }
         
-        // try again by add offset by couple of points to the left
-        let adjustedPoint = CGPoint(x: xPosition - 20, y: yPosition)
-        
+        // try again with an offset to the left
+        let itemDiameter = self.getItemDiameter(collectionView: lensCollectionView, itemScaleRatio: itemDiameterScaleRatio)
+        let adjustedPoint = CGPoint(x: xPosition - itemDiameter / 2, y: yPosition)
         if let indexPath = lensCollectionView.indexPathForItem(at: adjustedPoint) {
             selectCell(for: indexPath, animated: true)
             return
