@@ -70,8 +70,7 @@ class ViewController: UIViewController, LensMenuViewDelegate {
     }()
     
     private lazy var lensViewController: LensMenuController = {
-        let controller = LensMenuController(lensFiltersImages: lensFiltersImages, imageTintColor: .white, imageBackgroundColor: .systemRed, lensColor: .darkGray)
-        //controller.lensImageView.tintColor = .lightGray
+        let controller = LensMenuController(itemImages: lensFiltersImages, imageTintColor: .white, imageBackgroundColor: .systemRed, lensColor: .darkGray)
         controller.view.backgroundColor = .clear
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         controller.delegate = self

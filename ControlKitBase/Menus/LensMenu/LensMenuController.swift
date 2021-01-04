@@ -15,13 +15,13 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     public var imageTintColor: UIColor
     public var delegate: LensMenuViewDelegate?
     private let menuHeight: CGFloat = 75 // MARK: change this value to adjust button size; BE AWARE that dependent features might stop functioning perfectly
-    private var lensFiltersImages: [UIImage]
+    private var itemImages: [UIImage]
     private var itemManager: ItemManager
     private var itemDiameterScaleRatio: CGFloat = 0.9
     private var itemSelected: IndexPath?
     
     // MARK: UIViews
-    public lazy var lensImageView: UIImageView = {
+    private lazy var lensImageView: UIImageView = {
         let imageView = UIImageView()
         let image = UIImage(named: "cameraicon")
         imageView.image = image
@@ -31,7 +31,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         return imageView
     }()
     
-    public lazy var lensCollectionView: UICollectionView = {
+    private lazy var lensCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: LensFlowLayout())
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
@@ -43,7 +43,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         return collectionView
     }()
     
-    public lazy var pulsatingCircularView: UIView = {
+    private lazy var pulsatingCircularView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -53,7 +53,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     }()
         
     // MARK: init
-    public init(lensFiltersImages: [UIImage],
+    public init(itemImages: [UIImage],
                 imageTintColor: UIColor = .white,
                 imageBackgroundColor: UIColor = .systemBlue,
                 lensColor: UIColor = .lightGray,
@@ -61,12 +61,12 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
                 doPulseAnimationOnSelection: Bool = true) {
         self.doPerformSelectionFeedback = doPerformSelectionFeedback
         self.doPulseAnimationOnSelection = doPulseAnimationOnSelection
-        self.lensFiltersImages = lensFiltersImages
+        self.itemImages = itemImages
         self.lensColor = lensColor
         self.imageBackgroundColor = imageBackgroundColor
         self.imageTintColor = imageTintColor
         let estimatedNumberOfVisibleItems = 5   // will be calculated after view did appear
-        self.itemManager = ItemManager(numberOfItems: lensFiltersImages.count, numberOfVisibleItems: estimatedNumberOfVisibleItems)
+        self.itemManager = ItemManager(numberOfItems: itemImages.count, numberOfVisibleItems: estimatedNumberOfVisibleItems)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -81,12 +81,16 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        self.itemManager.numberOfVisibleItems = computeForTheNumberOfVisibleItems()
+        self.lensCollectionView.reloadData()
+    }
+    
+    private func computeForTheNumberOfVisibleItems() -> Int {
         let bounds = lensCollectionView.bounds
         let itemDiameter = bounds.size.height * itemDiameterScaleRatio
         let numberOfVisibleItems = Int((bounds.size.width) / itemDiameter)
         //print("numberOfVisibleItems - calculated: \(numberOfVisibleItems)")
-        self.itemManager.numberOfVisibleItems = numberOfVisibleItems
-        self.lensCollectionView.reloadData()
+        return numberOfVisibleItems
     }
     
     private func setupViews(superview: UIView) {
@@ -186,7 +190,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
             cell.button.isUserInteractionEnabled = true
         }
         
-        cell.image = lensFiltersImages[normalizedIndexPath.row]
+        cell.image = itemImages[normalizedIndexPath.row]
         let itemDiameter = getItemDiameter(collectionView: collectionView, itemScaleRatio: itemDiameterScaleRatio)
         cell.imageCornerRadius = itemDiameter / 2
         cell.button.tintColor = imageTintColor
