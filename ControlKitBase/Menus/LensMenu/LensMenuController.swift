@@ -152,7 +152,6 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         }
         
         if doPulseAnimationOnSelection  {
-            DispatchQueue.main.async {
                 CATransaction.begin()
                 
                 CATransaction.setCompletionBlock {
@@ -162,7 +161,6 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
                 self.pulsatingCircularView.backgroundColor = self.imageBackgroundColor
                 self.pulsatingCircularView.layer.add(Animator.createPulsingAnimation(), forKey: "pulsing")
                 CATransaction.commit()
-            }
         }
        
         if let itemSelected = itemSelected {
