@@ -51,6 +51,17 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         view.layer.masksToBounds = true
         return view
     }()
+    
+    public var menuItemImages: [UIImage] {
+        set(images){
+            itemImages = images
+            lensCollectionView.reloadData()
+            self.itemManager = ItemManager(numberOfItems: images.count, numberOfVisibleItems: computeForTheNumberOfVisibleItems())
+        }
+        get {
+            return itemImages
+        }
+    }
         
     // MARK: init
     public init(itemImages: [UIImage],

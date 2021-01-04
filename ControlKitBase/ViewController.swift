@@ -21,22 +21,22 @@ class ViewController: UIViewController, LensMenuViewDelegate {
 //    }()
     
     //  MARK: image test 2
-//    private lazy var lensFiltersImages: [UIImage] = {
-//        let aScalars = "a".unicodeScalars
-//        let aCode = aScalars[aScalars.startIndex].value
-//
-//        let letters: [Character] = (0..<26).map {
-//            i in Character(UnicodeScalar(aCode + i) ?? "a")
-//        }
-//
-//        let config = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .small)
-//        var images: [UIImage] = []
-//        for letter in letters {
-//          guard let image = UIImage(systemName: "\(letter).circle.fill", withConfiguration: config) else { break }
-//          images.append(image)
-//        }
-//        return images
-//    }()
+    private lazy var lensFiltersImages2: [UIImage] = {
+        let aScalars = "a".unicodeScalars
+        let aCode = aScalars[aScalars.startIndex].value
+
+        let letters: [Character] = (0..<3).map {
+            i in Character(UnicodeScalar(aCode + i) ?? "a")
+        }
+
+        let config = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .small)
+        var images: [UIImage] = []
+        for letter in letters {
+          guard let image = UIImage(systemName: "\(letter).circle.fill", withConfiguration: config) else { break }
+          images.append(image)
+        }
+        return images
+    }()
 
     
     // MARK: image test 3
@@ -81,6 +81,10 @@ class ViewController: UIViewController, LensMenuViewDelegate {
         super.viewDidLoad()
         setupViews(superview: self.view)
         view.backgroundColor = .white
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.lensViewController.menuItemImages = self.lensFiltersImages2
+        }
     }
     
     private func setupViews(superview: UIView) {
