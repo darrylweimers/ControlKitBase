@@ -177,9 +177,11 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
                 self.pulsatingCircularView.layer.add(Animator.createPulsingAnimation(), forKey: "pulsing")
                 CATransaction.commit()
         }
-       
-        if let itemSelected = itemSelected {
-            delegate?.lensMenuViewDidTapSelection(self.lensCollectionView, didTapSelectionAt: itemSelected, didTapItem: button)
+        
+        if let itemSelected = itemSelected,
+           let normalizedIndexPath = self.itemManager.getIndexPath(indexPath: itemSelected) {
+            print(normalizedIndexPath)
+            delegate?.lensMenuViewDidTapSelection(self.lensCollectionView, didTapSelectionAt: normalizedIndexPath, didTapItem: button)
         }
     }
     

@@ -82,9 +82,9 @@ class ViewController: UIViewController, LensMenuViewDelegate {
         setupViews(superview: self.view)
         view.backgroundColor = .white
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.lensViewController.menuItemImages = self.lensFiltersImages2
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//            self.lensViewController.menuItemImages = self.lensFiltersImages2
+//        }
     }
     
     private func setupViews(superview: UIView) {
@@ -114,38 +114,7 @@ class ViewController: UIViewController, LensMenuViewDelegate {
     }
     
     func lensMenuViewDidTapSelection(_ lensMenuView: UICollectionView, didTapSelectionAt indexPath: IndexPath, didTapItem button: UIButton) {
-//        print("button tapped")
-//        print("\(lensMenuView.frame)")
-//        print("\(lensMenuView.frame.width)")
-//        print("\(lensMenuView.frame.height)")
-//        print("\(lensMenuView.frame.midX)")
-//        print("\(lensMenuView.frame.midY)")
-//        
-//        print("compare: \(CGPoint(x: button.bounds.midX, y: button.bounds.midY))")
-//        let center = button.convert(button.center, to: self.view)
-//        print(center)
-//        //let center = CGPoint(x: lensMenuView.frame.width/2, y: lensMenuView.frame.height/2)
-//        let pulse = PulseAnimation(numberOfPulse: 3, radius: 90, postion: center)
-//        pulse.animationDuration = 1.0
-//        pulse.backgroundColor = #colorLiteral(red: 0.8993218541, green: 0.1372507513, blue: 0.2670814395, alpha: 1)
-//        view.layer.insertSublayer(pulse, below: self.view.layer)
-        
-//
-//                let pulse1 = CASpringAnimation(keyPath: "transform.scale")
-//                pulse1.duration = 0.6
-//                pulse1.fromValue = 1.0
-//                pulse1.toValue = 1.12
-//                pulse1.autoreverses = true
-//                pulse1.repeatCount = 3
-//                pulse1.initialVelocity = 0.5
-//                pulse1.damping = 0.8
-//
-//        //        let animationGroup = CAAnimationGroup()
-//        //        animationGroup.duration = 2.7
-//        //        animationGroup.repeatCount = 5
-//        //        animationGroup.animations = [pulse1]
-//
-//                button.layer.add(pulse1, forKey: "pulse")
+        print(indexPath.row)
         
     }
 }
