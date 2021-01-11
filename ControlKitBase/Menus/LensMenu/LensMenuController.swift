@@ -2,8 +2,14 @@ import UIKit
 
 public protocol LensMenuViewDelegate {
     func lensMenuView(_ lensMenuView: UICollectionView, didSelectAt indexPath: IndexPath)
-    func lensMenuViewDidTapSelection(_ lensMenuView: UICollectionView, didTapSelectionAt indexPath: IndexPath, didTapItem button: UIButton)
+    func lensMenuViewDidTapSelection(_ lensMenuView: UICollectionView, didTapSelectionAt indexPath: IndexPath, menuItem: MenuItem)
 }
+
+public protocol MenuItem {
+    func getImage() -> UIImage
+    func getDescription() -> String
+}
+
 
 public class LensMenuController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout {
     
@@ -15,7 +21,6 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
     public var imageTintColor: UIColor
     public var delegate: LensMenuViewDelegate?
     private let menuHeight: CGFloat = 75 // MARK: change this value to adjust button size; BE AWARE that dependent features might stop functioning perfectly
-    private var itemImages: [UIImage]
     private var itemManager: ItemManager
     private var itemDiameterScaleRatio: CGFloat = 0.9
     private var itemSelected: IndexPath?
@@ -52,19 +57,21 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         return view
     }()
     
-    public var menuItemImages: [UIImage] {
-        set(images){
-            itemImages = images
+    private var _menuItems: [MenuItem]
+    
+    public var menuItems: [MenuItem] {
+        set(items){
+            _menuItems = items
             lensCollectionView.reloadData()
-            self.itemManager = ItemManager(numberOfItems: images.count, numberOfVisibleItems: computeForTheNumberOfVisibleItems())
+            self.itemManager = ItemManager(numberOfItems: items.count, numberOfVisibleItems: computeForTheNumberOfVisibleItems())
         }
         get {
-            return itemImages
+            return _menuItems
         }
     }
-        
+
     // MARK: init
-    public init(itemImages: [UIImage],
+    public init(menuItems: [MenuItem],
                 imageTintColor: UIColor = .white,
                 imageBackgroundColor: UIColor = .systemBlue,
                 lensColor: UIColor = .lightGray,
@@ -72,12 +79,13 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
                 doPulseAnimationOnSelection: Bool = true) {
         self.doPerformSelectionFeedback = doPerformSelectionFeedback
         self.doPulseAnimationOnSelection = doPulseAnimationOnSelection
-        self.itemImages = itemImages
+        self._menuItems = menuItems
         self.lensColor = lensColor
         self.imageBackgroundColor = imageBackgroundColor
         self.imageTintColor = imageTintColor
+        
         let estimatedNumberOfVisibleItems = 5   // will be calculated after view did appear
-        self.itemManager = ItemManager(numberOfItems: itemImages.count, numberOfVisibleItems: estimatedNumberOfVisibleItems)
+        self.itemManager = ItemManager(numberOfItems: _menuItems.count, numberOfVisibleItems: estimatedNumberOfVisibleItems)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -180,8 +188,8 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
         
         if let itemSelected = itemSelected,
            let normalizedIndexPath = self.itemManager.getIndexPath(indexPath: itemSelected) {
-            print(normalizedIndexPath)
-            delegate?.lensMenuViewDidTapSelection(self.lensCollectionView, didTapSelectionAt: normalizedIndexPath, didTapItem: button)
+            //print(normalizedIndexPath)
+            delegate?.lensMenuViewDidTapSelection(self.lensCollectionView, didTapSelectionAt: normalizedIndexPath, menuItem: menuItems[normalizedIndexPath.row])
         }
     }
     
@@ -203,7 +211,7 @@ public class LensMenuController: UIViewController, UICollectionViewDelegate, UIC
             cell.button.isUserInteractionEnabled = true
         }
         
-        cell.image = itemImages[normalizedIndexPath.row]
+        cell.image = menuItems[normalizedIndexPath.row].getImage()
         let itemDiameter = getItemDiameter(collectionView: collectionView, itemScaleRatio: itemDiameterScaleRatio)
         cell.imageCornerRadius = itemDiameter / 2
         cell.button.tintColor = imageTintColor
