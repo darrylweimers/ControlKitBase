@@ -21,7 +21,7 @@ This project's purpose is to create a mock of the Snapchat image selector.
 - File > Swift Packages > Add Package Dependency
 - Add `https://github.com/darrylweimers/UtilityKit`
 - Select "Up to Next Major" with "1.0.1"
-- 
+
 ## Credits
 
 - Darryl Weimers
