@@ -8,71 +8,64 @@
 import UIKit
 import UtilityKit
 
-class ViewController: UIViewController, LensMenuViewDelegate {
-    
-    //  MARK: image test 1
-//    private lazy var lensFiltersImages: [UIImage] = {
-//        var images: [UIImage] = []
-//        for i in 0...19 {
-//          guard let image = UIImage(named: "face\(i)") else { break }
-//          images.append(image)
-//        }
-//        return images
-//    }()
-    
-    //  MARK: image test 2
-    private lazy var lensFiltersImages2: [UIImage] = {
-        let aScalars = "a".unicodeScalars
-        let aCode = aScalars[aScalars.startIndex].value
+// MARK: dummy data source for testing menu
+var testImages1: [UIImage] = {
+    var images: [UIImage] = []
+    for i in 0...19 {
+      guard let image = UIImage(named: "face\(i)") else { break }
+      images.append(image)
+    }
+    return images
+}()
 
-        let letters: [Character] = (0..<3).map {
-            i in Character(UnicodeScalar(aCode + i) ?? "a")
-        }
+var testImages2: [UIImage] = {
+    let aScalars = "a".unicodeScalars
+    let aCode = aScalars[aScalars.startIndex].value
 
-        let config = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .small)
-        var images: [UIImage] = []
-        for letter in letters {
-          guard let image = UIImage(systemName: "\(letter).circle.fill", withConfiguration: config) else { break }
-          images.append(image)
-        }
-        return images
-    }()
+    let letters: [Character] = (0..<3).map {
+        i in Character(UnicodeScalar(aCode + i) ?? "a")
+    }
 
-    
-    // MARK: image test 3
-    private lazy var lensFiltersImages: [UIImage] = {
-        var images: [UIImage] = []
-        let config = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .small)
+    let config = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .small)
+    var images: [UIImage] = []
+    for letter in letters {
+      guard let image = UIImage(systemName: "\(letter).circle.fill", withConfiguration: config) else { break }
+      images.append(image)
+    }
+    return images
+}()
+
+var testImages3: [UIImage] = {
+    var images: [UIImage] = []
+    let config = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .small)
 
 
-        if let image = UIImage(systemName: "trash", withConfiguration: config) {
-            images.append(image)
-        }
-        if let image = UIImage(systemName: "square.and.arrow.up", withConfiguration: config) {
-            images.append(image)
-        }
-        if let image = UIImage(systemName: "square.and.arrow.down.on.square", withConfiguration: config) {
-            images.append(image)
-        }
-        if let image = UIImage(systemName: "square.and.arrow.down.on.square", withConfiguration: config) {
-            images.append(image)
-        }
-        if let image = UIImage(systemName: "square.and.arrow.down.on.square", withConfiguration: config) {
-            images.append(image)
-        }
-        return images
-    }()
+    if let image = UIImage(systemName: "trash", withConfiguration: config) {
+        images.append(image)
+    }
+    if let image = UIImage(systemName: "square.and.arrow.up", withConfiguration: config) {
+        images.append(image)
+    }
+    if let image = UIImage(systemName: "square.and.arrow.down.on.square", withConfiguration: config) {
+        images.append(image)
+    }
+    if let image = UIImage(systemName: "archivebox", withConfiguration: config) {
+        images.append(image)
+    }
+    return images
+}()
 
-    public lazy var faceImageView: UIImageView = {
+
+class ViewController: UIViewController, MenuViewControllerDelegate {
+
+    public lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    
-    
-    private lazy var lensViewController: LensMenuController = {
-        let controller = LensMenuController(menuItems: MoveItems.allCases, imageTintColor: .white, imageBackgroundColor: .systemRed, lensColor: .darkGray)
+    private lazy var menuViewController: MenuViewController = {
+        let controller = MenuViewController(images: testImages3, imageTintColor: .white, imageBackgroundColor: .systemRed, lensColor: .darkGray)
         controller.view.backgroundColor = .clear
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         controller.delegate = self
@@ -82,130 +75,35 @@ class ViewController: UIViewController, LensMenuViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews(superview: self.view)
-        view.backgroundColor = .white
-        
-        // test switch to another set of menu items
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.lensViewController.menuItems = AddItems.allCases
-        }
+        view.backgroundColor = .black
     }
     
     private func setupViews(superview: UIView) {
+        add(menuViewController)
+        superview.addSubview(imageView)
         
-        add(lensViewController)
         NSLayoutConstraint.activate([
-            lensViewController.view.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
-            lensViewController.view.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
-//            lensViewController.view.widthAnchor.constraint(equalToConstant: 3 * 80),
-//            lensViewController.view.centerXAnchor.constraint(equalTo: superview.centerXAnchor),
-            lensViewController.view.bottomAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.bottomAnchor),
-            lensViewController.view.heightAnchor.constraint(equalToConstant: 80),
+            menuViewController.view.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+            menuViewController.view.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
+            menuViewController.view.bottomAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.bottomAnchor),
+            menuViewController.view.heightAnchor.constraint(equalToConstant: 80),
         ])
         
-        superview.addSubview(faceImageView)
         NSLayoutConstraint.activate([
-            faceImageView.heightAnchor.constraint(equalToConstant: 200),
-            faceImageView.widthAnchor.constraint(equalToConstant: 200),
-            faceImageView.centerYAnchor.constraint(equalTo: superview.centerYAnchor),
-            faceImageView.centerXAnchor.constraint(equalTo: superview.centerXAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 200),
+            imageView.widthAnchor.constraint(equalToConstant: 200),
+            imageView.centerYAnchor.constraint(equalTo: superview.centerYAnchor),
+            imageView.centerXAnchor.constraint(equalTo: superview.centerXAnchor),
         ])
     }
     
-    // MARK: lens menu delegate
-    func lensMenuView(_ lensMenuView: UICollectionView, didSelectAt indexPath: IndexPath) {
-        faceImageView.image = lensFiltersImages[indexPath.row]
+    // MARK: menu view controller delegate
+    func menuViewController(_ lensMenuView: UICollectionView, didSelectAt indexPath: IndexPath) {
+        print("selected image at index \(indexPath.row)")
+        imageView.image = testImages3[indexPath.row]
     }
     
-    func lensMenuViewDidTapSelection(_ lensMenuView: UICollectionView, didTapSelectionAt indexPath: IndexPath, menuItem: MenuItem) {
-        print(indexPath.row)
-        print(menuItem)
-        
-        switch menuItem {
-        case MoveItems.delete:
-            print("It is a delete")
-            break
-        case MoveItems.share:
-            break
-        default:
-            break
-        }
+    func menuViewController(_ lensMenuView: UICollectionView, didTapSelectionAt indexPath: IndexPath) {
+        print("selected image at index \(indexPath.row)")
     }
-}
-
-    
-public enum MoveItems : MenuItem, CaseIterable {
-    case delete
-    case share
-    case copy
-    case archive
-
-    public func getImage() -> UIImage {
-        switch self {
-        case .delete:
-            return UIImage(systemName: "trash", withConfiguration: MoveItems.imageConfig)!
-        case .share:
-            return UIImage(systemName: "square.and.arrow.up", withConfiguration: MoveItems.imageConfig)!
-        case .copy:
-            return UIImage(systemName: "square.and.arrow.down.on.square", withConfiguration: MoveItems.imageConfig)!
-        case .archive:
-            return UIImage(systemName: "archivebox", withConfiguration: MoveItems.imageConfig)!
-        }
-    }
-
-    public func getDescription() -> String {
-        switch self {
-        case .delete:
-            return "delete"
-        case .share:
-            return "share"
-        case .copy:
-            return "copy"
-        case .archive:
-            return "archive"
-        }
-    }
-    
-    private static let imageConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .small)
-    
-}
-
-public enum AddItems : MenuItem, CaseIterable {
-    case camera
-    case photo
-    case microphone
-    case text
-    case board
-    
-    public func getDescription() -> String {
-        switch self {
-        case .camera:
-            return "camera"
-        case .photo:
-            return "photo"
-        case .microphone:
-            return "microphone"
-        case .text:
-            return "text"
-        case .board:
-            return "board"
-        }
-    }
-    
-    public func getImage() -> UIImage {
-        switch self {
-        case .camera:
-            return UIImage(systemName: "camera", withConfiguration: AddItems.imageConfig)!
-        case .photo:
-            return UIImage(systemName: "photo", withConfiguration: AddItems.imageConfig)!
-        case .microphone:
-            return UIImage(systemName: "mic", withConfiguration: AddItems.imageConfig)!
-        case .text:
-            return UIImage(systemName: "square.and.pencil", withConfiguration: AddItems.imageConfig)!
-        case .board:
-            return UIImage(systemName: "note", withConfiguration: AddItems.imageConfig)!
-        }
-    }
-    
-    private static let imageConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .light, scale: .small)
-    
 }

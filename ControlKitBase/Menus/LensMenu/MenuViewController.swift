@@ -1,15 +1,14 @@
 import UIKit
 
 public protocol MenuViewControllerDelegate {
-    func lensMenuView(_ lensMenuView: UICollectionView, didSelectAt indexPath: IndexPath)
-    func lensMenuViewDidTapSelection(_ lensMenuView: UICollectionView, didTapSelectionAt indexPath: IndexPath)
+    func menuViewController(_ lensMenuView: UICollectionView, didSelectAt indexPath: IndexPath)
+    func menuViewController(_ lensMenuView: UICollectionView, didTapSelectionAt indexPath: IndexPath)
 }
 
 public protocol MenuItem {
     func getImage() -> UIImage
     func getDescription() -> String
 }
-
 
 public class MenuViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout {
     
@@ -20,13 +19,13 @@ public class MenuViewController: UIViewController, UICollectionViewDelegate, UIC
     public var imageBackgroundColor: UIColor
     public var imageTintColor: UIColor
     public var delegate: MenuViewControllerDelegate?
-    private let menuHeight: CGFloat = 75 // MARK: change this value to adjust button size; BE AWARE that dependent features might stop functioning perfectly
+    private let menuHeight: CGFloat = 75                    // TODO: need to compute the height to make this module reuseable, presently hardcoded
     private var itemManager: ItemManager
     private var itemDiameterScaleRatio: CGFloat = 0.9
     private var itemSelected: IndexPath?
     
     // MARK: UIViews
-    private lazy var lensImageView: UIImageView = {
+    private lazy var circleImageView: UIImageView = {
         let imageView = UIImageView()
         let image = UIImage(named: "cameraicon")
         imageView.image = image
@@ -60,7 +59,7 @@ public class MenuViewController: UIViewController, UICollectionViewDelegate, UIC
     private var _menuImages: [UIImage]
 
     // MARK: init
-    public init(menuItems: [UIImage],
+    public init(images: [UIImage],
                 imageTintColor: UIColor = .white,
                 imageBackgroundColor: UIColor = .systemBlue,
                 lensColor: UIColor = .lightGray,
@@ -68,7 +67,7 @@ public class MenuViewController: UIViewController, UICollectionViewDelegate, UIC
                 doPulseAnimationOnSelection: Bool = true) {
         self.doPerformSelectionFeedback = doPerformSelectionFeedback
         self.doPulseAnimationOnSelection = doPulseAnimationOnSelection
-        self._menuImages = menuItems
+        self._menuImages = images
         self.lensColor = lensColor
         self.imageBackgroundColor = imageBackgroundColor
         self.imageTintColor = imageTintColor
@@ -118,12 +117,12 @@ public class MenuViewController: UIViewController, UICollectionViewDelegate, UIC
             collectionView.heightAnchor.constraint(equalToConstant: menuHeight)
         ])
         
-        superview.addSubview(lensImageView)
+        superview.addSubview(circleImageView)
         NSLayoutConstraint.activate([
-            lensImageView.centerXAnchor.constraint(equalTo: superview.centerXAnchor),
-            lensImageView.bottomAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.bottomAnchor),
-            lensImageView.heightAnchor.constraint(equalToConstant: menuHeight),
-            lensImageView.widthAnchor.constraint(equalToConstant: menuHeight),
+            circleImageView.centerXAnchor.constraint(equalTo: superview.centerXAnchor),
+            circleImageView.bottomAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.bottomAnchor),
+            circleImageView.heightAnchor.constraint(equalToConstant: menuHeight),
+            circleImageView.widthAnchor.constraint(equalToConstant: menuHeight),
         ])
     }
 
@@ -138,7 +137,7 @@ public class MenuViewController: UIViewController, UICollectionViewDelegate, UIC
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: animated)
         
         if let normalizedIndexPath = self.itemManager.getIndexPath(indexPath: indexPath) {
-            delegate?.lensMenuView(self.collectionView, didSelectAt: normalizedIndexPath)
+            delegate?.menuViewController(self.collectionView, didSelectAt: normalizedIndexPath)
         }
         
         // save selected item and reload to make button item tappable
@@ -178,7 +177,7 @@ public class MenuViewController: UIViewController, UICollectionViewDelegate, UIC
         if let itemSelected = itemSelected,
            let normalizedIndexPath = self.itemManager.getIndexPath(indexPath: itemSelected) {
             //print(normalizedIndexPath)
-            delegate?.lensMenuViewDidTapSelection(self.collectionView, didTapSelectionAt: normalizedIndexPath)
+            delegate?.menuViewController(self.collectionView, didTapSelectionAt: normalizedIndexPath)
         }
     }
     

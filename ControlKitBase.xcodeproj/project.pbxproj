@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CD17D52E259FD2D300FBF32F /* LensMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD17D52B259FD2D200FBF32F /* LensMenuController.swift */; };
+		CD17D52E259FD2D300FBF32F /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD17D52B259FD2D200FBF32F /* MenuViewController.swift */; };
 		CD17D52F259FD2D300FBF32F /* LensFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD17D52C259FD2D200FBF32F /* LensFlowLayout.swift */; };
 		CD17D530259FD2D300FBF32F /* LensCircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD17D52D259FD2D200FBF32F /* LensCircleCell.swift */; };
 		CD17D536259FD30400FBF32F /* UtilityKit in Frameworks */ = {isa = PBXBuildFile; productRef = CD17D535259FD30400FBF32F /* UtilityKit */; };
@@ -39,7 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		CD17D52B259FD2D200FBF32F /* LensMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LensMenuController.swift; sourceTree = "<group>"; };
+		CD17D52B259FD2D200FBF32F /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		CD17D52C259FD2D200FBF32F /* LensFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LensFlowLayout.swift; sourceTree = "<group>"; };
 		CD17D52D259FD2D200FBF32F /* LensCircleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LensCircleCell.swift; sourceTree = "<group>"; };
 		CDFD4388259FD1C7003CCB19 /* ControlKitBase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ControlKitBase.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,7 +97,7 @@
 			children = (
 				CD17D52D259FD2D200FBF32F /* LensCircleCell.swift */,
 				CD17D52C259FD2D200FBF32F /* LensFlowLayout.swift */,
-				CD17D52B259FD2D200FBF32F /* LensMenuController.swift */,
+				CD17D52B259FD2D200FBF32F /* MenuViewController.swift */,
 			);
 			path = LensMenu;
 			sourceTree = "<group>";
@@ -294,7 +294,7 @@
 				CDFD43C7259FD200003CCB19 /* ViewController.swift in Sources */,
 				CDFD438C259FD1C7003CCB19 /* AppDelegate.swift in Sources */,
 				CD17D52F259FD2D300FBF32F /* LensFlowLayout.swift in Sources */,
-				CD17D52E259FD2D300FBF32F /* LensMenuController.swift in Sources */,
+				CD17D52E259FD2D300FBF32F /* MenuViewController.swift in Sources */,
 				CDFD438E259FD1C7003CCB19 /* SceneDelegate.swift in Sources */,
 				CD17D530259FD2D300FBF32F /* LensCircleCell.swift in Sources */,
 			);
