@@ -8,7 +8,7 @@ This project's purpose is to create a mock of the Snapchat image selector.
 
 - Select image
 
-![select-images](_Gifs/floating-action-button-demo.gif)
+![select-images](_Gifs/select-images.gif)
 
 ## Requirements
 
